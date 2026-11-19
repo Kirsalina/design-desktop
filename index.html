@@ -17464,6 +17464,26 @@ html :is(#design-app,body) footer.shop-footer.shop-footer .shop-footer-grid.shop
 html :is(#design-app,body) footer.shop-footer.shop-footer .footer-catalog-links.footer-catalog-links{display:flex!important;flex-wrap:wrap!important;align-items:flex-start!important;column-gap:16px!important;row-gap:0!important;columns:auto!important}
 html :is(#design-app,body) footer.shop-footer.shop-footer .footer-catalog-links.footer-catalog-links>a{flex:0 0 calc(50% - 8px)!important;width:calc(50% - 8px)!important;min-width:0!important;max-width:calc(50% - 8px)!important;box-sizing:border-box}
 }
+</style><style id="ro-ctor-touch-css">
+/* Конструктор на сенсорных экранах (19.11): щипок и перетаскивание достаются макету, а не странице; страница не пружинит */
+@media (pointer:coarse){
+html,body{overscroll-behavior:none!important;touch-action:manipulation}
+#ui .plan>svg,#ui svg[data-cam]{touch-action:none!important;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+}
+</style><script id="ro-ctor-touch">
+(function(){
+ if(!window.matchMedia||!matchMedia('(pointer:coarse)').matches)return;
+ /* iOS: системный зум страницы щипком выключен во всём конструкторе; масштаб макета – своими жестами на плане/3D */
+ ['gesturestart','gesturechange','gestureend'].forEach(function(t){document.addEventListener(t,function(e){e.preventDefault()},{passive:false})});
+ document.addEventListener('touchmove',function(e){if(e.touches&&e.touches.length>1)e.preventDefault()},{passive:false});
+})();
+<%/script><style id="ro-lock-note-v2">
+/* Плашка «Только просмотр» (19.11): компактнее – значок, короткий заголовок, текст 14/20, маленькая кнопка */
+html body #ui .ro-lock-note{display:grid!important;grid-template-columns:20px minmax(0,1fr)!important;gap:8px 10px!important;align-items:start!important;padding:12px 14px!important;border:1px solid #DCE4E2!important;border-radius:12px!important;background:#F7F6F2!important}
+html body #ui .ro-lock-note::before{content:"";grid-row:1/3;width:20px;height:20px;background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23006B79%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M2%2012s3.6-7%2010-7%2010%207%2010%207-3.6%207-10%207S2%2012%202%2012z%22/%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%223%22/%3E%3C/svg%3E") no-repeat center/20px}
+html body #ui .ro-lock-note p{font-size:14px!important;line-height:20px!important;color:#566273!important}
+html body #ui .ro-lock-note p b{display:block;color:#152A4B;font-weight:600;margin-bottom:2px}
+html body #ui .ro-lock-note .btn{grid-column:2!important;justify-self:start!important;height:32px!important;min-height:32px!important;padding:0 12px!important;border-radius:8px!important;font-size:13px!important;line-height:18px!important}
 </style></head><body>
 <title>RemOnLine — Конструктор</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -23575,9 +23595,9 @@ window.addEventListener('click',function(e){var a=e.target.closest&&e.target.clo
   return ''}
  function lock(){var on=ui.classList.contains('ro-cl-real');ui.querySelectorAll('.ro-lock-note').forEach(function(n){if(!on)n.remove()});if(!on)return;
   var pans=[].slice.call(ui.querySelectorAll('.grid-c>aside.pan')).filter(function(x){return x.querySelector('[data-act=rt-a],[data-act=rt-p]')||x===ui.querySelector('.grid-c>aside.pan:last-of-type')});
-  ui.querySelectorAll('section.sheet').forEach(function(x){if(x.querySelector('input,select,.fld'))pans.push(x)});
+  ui.querySelectorAll('section.sheet').forEach(function(x){var h=x.querySelector('.sh,h2,h3');if(x.querySelector('input,select,.fld')||(h&&/Параметры/.test(h.textContent)))pans.push(x)});
   pans.forEach(function(pn){if(pn.querySelector('.ro-lock-note')||!pn.querySelector('input,select,.fld,[data-act]'))return;var n=document.createElement('div');n.className='ro-lock-note';n.setAttribute('role','note');
-   n.innerHTML='<p>В реалистичном виде предметы и отделка не меняются. Чтобы двигать, поворачивать или перекрашивать, перейдите в 2D.</p><button type="button" class="btn s40" data-cl="v2">Перейти в 2D</button>';
+   n.innerHTML='<p><b>Только просмотр.</b> В реалистичном виде предметы и отделка не меняются. Чтобы двигать, поворачивать или перекрашивать, перейдите в 2D.</p><button type="button" class="btn s40" data-cl="v2">Перейти в 2D</button>';
    var shd=pn.querySelector(':scope>.hd,:scope>.sh');if(shd){shd.after(n);return}
    var tabs=pn.querySelector('[role=tablist],.rtabs,.tabs');var at=tabs&&tabs.parentElement===pn?tabs.nextSibling:pn.querySelector('h3,h2');if(at&&at.parentElement)at.parentElement.insertBefore(n,at);else pn.insertBefore(n,pn.firstChild)})}
  function draw(){
